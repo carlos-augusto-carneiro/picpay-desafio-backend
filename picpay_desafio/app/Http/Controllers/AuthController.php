@@ -2,25 +2,36 @@
 
 namespace App\Http\Controllers;
 
+use App\CQRS\User\Commands\LoginCommand;
+use App\CQRS\User\Handlers\LoginHandler;
+use App\CQRS\User\Handlers\LogoutHandler;
+use App\CQRS\User\Handlers\RefreshLoginHandler;
 use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
-    public function login(Request $request)
+    public function login(Request $request, LoginHandler $handler)
     {
-        return view("");
+        $credentials = $request->only(['email', 'password']);
+
+        $command = new LoginCommand(
+            email: $credentials['email'],
+            password: $credentials['password'],
+        );
+
+        $handler->handle($command);
+        $tokenData = $handler->handle($command);
+        return response()->json($tokenData);
     }
 
-    public function register(Request $request)
+    public function logout(LogoutHandler $handler)
     {
-        return view("");
+        $handler->handle();
+        return response()->json(['message' => 'Logged out successfully']);
     }
-    public function logout(Request $request)
+    public function refreshLogin(RefreshLoginHandler $handler)
     {
-        return view("");
-    }
-    public function refreshLogin(Request $request)
-    {
-        return view("");
+        $tokenData = $handler->handle();
+        return response()->json($tokenData);
     }
 }
