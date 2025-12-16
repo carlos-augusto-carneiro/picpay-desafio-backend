@@ -11,7 +11,7 @@ class StoreWalletRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,19 @@ class StoreWalletRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "user_id"=> "required|string|exists:users,id",
+            "balance"=> "required|numeric|min:0",
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'user_id.required' => 'O campo user_id é obrigatório.',
+            'user_id.exists' => 'O user_id fornecido não existe.',
+            'balance.required' => 'O campo balance é obrigatório.',
+            'balance.numeric' => 'O campo balance deve ser um número.',
+            'balance.min' => 'O campo balance deve ser no mínimo 0.',
         ];
     }
 }
