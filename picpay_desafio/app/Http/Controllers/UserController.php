@@ -127,7 +127,7 @@ class UserController extends Controller
      * @OA\Response(response=404, description="Usuário não encontrado")
      * )
      */
-    public function show(int $id, GetUserHandler $handler)
+    public function show(string $id, GetUserHandler $handler)
     {
         $query = new GetUserQuery(userId: $id);
         $user = $handler->handle($query);
@@ -171,7 +171,7 @@ class UserController extends Controller
      * @OA\Response(response=422, description="Erro de validação")
      * )
      */
-    public function update(int $id, UpdateUserHandler $handler, UpdateUserRequest $request)
+    public function update(string $id, UpdateUserHandler $handler, UpdateUserRequest $request)
     {
         $data = $request->validated();
 
@@ -212,7 +212,7 @@ class UserController extends Controller
      * @OA\Response(response=404, description="Usuário não encontrado")
      * )
      */
-    public function destroy(int $id, DeleteUserHandler $handler)
+    public function destroy(string $id, DeleteUserHandler $handler)
     {
         $command = new DeleteUserCommand(userId: $id);
         $handler->handle($command);

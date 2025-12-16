@@ -5,7 +5,7 @@ namespace App\CQRS\User\Commands;
 readonly class UpdateUserCommand
 {
     public function __construct(
-        public int $userId,
+        public string $userId,
         public ?string $name = null,
         public ?string $email = null,
         public ?string $password = null,
