@@ -11,7 +11,7 @@ readonly class CreateUserCommand
         public string $name,
         public string $email,
         public string $password,
-        public CpfCnpjType $cpf_cnpj,
+        public string $cpf_cnpj,
         public UserType $type ,
     ) {}
 }

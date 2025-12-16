@@ -28,7 +28,7 @@ class StoreUserRequest extends FormRequest
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => ['required', 'string', 'confirmed', Password::min(8)->max(16)->mixedCase()->numbers()->symbols()],
-            'cpf_cnpj' => 'required|string|size:11|in:cpf,cnpj|unique:users,cpf_cnpj',
+            'cpf_cnpj' => 'required|string|size:11|unique:users,cpf_cnpj',
             'type' => 'required|in:user,lojista',
         ];
     }
