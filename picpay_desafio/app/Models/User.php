@@ -25,6 +25,8 @@ class User extends Authenticatable implements JWTSubject
         'name',
         'email',
         'password',
+        'email_verified_at',
+        'email_verified',
         'cpf_cnpj',
         'type',
     ];
@@ -49,6 +51,7 @@ class User extends Authenticatable implements JWTSubject
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'email_verified' => 'boolean',
             'cpf_cnpj' => CpfCnpjType::class,
             'type' => UserType::class,
         ];

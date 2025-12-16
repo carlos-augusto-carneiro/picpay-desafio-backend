@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Enums\TransactionType;
 
 class Transaction extends Model
 {
@@ -13,6 +14,13 @@ class Transaction extends Model
         'wallet_id_destination',
         'description',
     ];
+    protected function casts(): array
+    {
+        return [
+            'amount' => 'decimal:2',
+            'type'=> TransactionType::class,
+        ];
+    }
 
     public function wallet()
     {
