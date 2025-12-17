@@ -1,0 +1,52 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: picpay-app
+    container_name: picpay-api
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - .:/var/www
+      - ./.env:/var/www/.env
+    depends_on:
+      - db
+
+  queue-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: picpay-worker
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - .:/var/www
+      - ./.env:/var/www/.env
+    depends_on:
+      - app
+    command: php artisan queue:work --tries=5
+
+  db:
+    image: mysql:8.0
+    container_name: picpay-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+    ports:
+      - "3306:3306"
+
+  nginx:
+    image: nginx:alpine
+    container_name: picpay-nginx
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www
+      - ./docker-config/nginx:/etc/nginx/conf.d/
+    depends_on:
+      - app

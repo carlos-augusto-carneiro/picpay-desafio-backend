@@ -19,8 +19,9 @@ O **PicPay Simplificado** é uma plataforma de pagamentos que permite:
 ### Stack Tecnológica
 
 - **Framework**: Laravel 12 (PHP 8.2+)
-- **Banco de Dados**: SQLite (desenvolvimento)
+- **Banco de Dados**: SQLite (desenvolvimento) e MySql no container Docker
 - **Autenticação**: JWT (tymon/jwt-auth)
+- **Docker**: Docker e Docker Compose
 - **Documentação API**: Swagger/OpenAPI (l5-swagger)
 - **Fila de Jobs**: Laravel Queue (para notificações assíncronas)
 
