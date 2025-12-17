@@ -5,7 +5,7 @@
 
 API RESTful desenvolvida para o desafio PicPay, implementando uma plataforma de pagamentos simplificada com transferências entre usuários e lojistas.
 
-## 📋 Sobre o Projeto
+## Sobre o Projeto
 
 O **PicPay Simplificado** é uma plataforma de pagamentos que permite:
 - Cadastro de usuários comuns e lojistas
@@ -14,7 +14,7 @@ O **PicPay Simplificado** é uma plataforma de pagamentos que permite:
 - Transferências de usuários para lojistas
 - Consulta de saldo e extrato de transações
 
-## 🏗️ Arquitetura e Tecnologias
+## Arquitetura e Tecnologias
 
 ### Stack Tecnológica
 
@@ -57,20 +57,20 @@ app/
 - **Repository Pattern**: Abstração de acesso a dados através dos Models
 - **Job Queue Pattern**: Processamento assíncrono de notificações
 
-## ✅ Requisitos Implementados
+##  Requisitos Implementados
 
 ### Regras de Negócio Atendidas
 
-- ✅ **Cadastro de Usuários**: Suporte para usuários comuns e lojistas com validação de CPF/CNPJ e e-mail únicos
-- ✅ **Tipos de Usuário**: Sistema diferencia entre `user` e `lojista`
-- ✅ **Carteiras Digitais**: Cada usuário possui uma carteira criada automaticamente no cadastro
-- ✅ **Transferências**: Usuários podem transferir para outros usuários e lojistas
-- ✅ **Restrição de Lojistas**: Lojistas **não podem** realizar transferências (apenas recebem)
-- ✅ **Validação de Saldo**: Verificação de saldo suficiente antes de transferências e saques
-- ✅ **Autorização Externa**: Integração com serviço mock de autorização (`https://util.devi.tools/api/v2/authorize`)
-- ✅ **Transações Atômicas**: Operações de transferência são transacionais (rollback em caso de erro)
-- ✅ **Notificações Assíncronas**: Envio de notificações via Job Queue para serviço externo (`https://util.devi.tools/api/v1/notify`)
-- ✅ **API RESTful**: Endpoints seguindo padrões REST
+-  **Cadastro de Usuários**: Suporte para usuários comuns e lojistas com validação de CPF/CNPJ e e-mail únicos
+-  **Tipos de Usuário**: Sistema diferencia entre `user` e `lojista`
+-  **Carteiras Digitais**: Cada usuário possui uma carteira criada automaticamente no cadastro
+-  **Transferências**: Usuários podem transferir para outros usuários e lojistas
+-  **Restrição de Lojistas**: Lojistas **não podem** realizar transferências (apenas recebem)
+-  **Validação de Saldo**: Verificação de saldo suficiente antes de transferências e saques
+-  **Autorização Externa**: Integração com serviço mock de autorização (`https://util.devi.tools/api/v2/authorize`)
+-  **Transações Atômicas**: Operações de transferência são transacionais (rollback em caso de erro)
+-  **Notificações Assíncronas**: Envio de notificações via Job Queue para serviço externo (`https://util.devi.tools/api/v1/notify`)
+-  **API RESTful**: Endpoints seguindo padrões REST
 
 ### Funcionalidades Extras Implementadas
 
@@ -259,7 +259,7 @@ Implementação básica de circuit breaker no `AuthorizationService`:
 | Notificações assíncronas | ✅ | Jobs com retry automático |
 | API RESTful | ✅ | Endpoints seguindo padrões REST |
 
-## 🎯 Diferenciais Implementados
+## Diferenciais Implementados
 
 - **Arquitetura CQRS**: Separação clara entre comandos e queries
 - **Design Patterns**: Aplicação de vários padrões de projeto
@@ -271,7 +271,7 @@ Implementação básica de circuit breaker no `AuthorizationService`:
 - **Jobs Assíncronos**: Processamento em background
 - **Circuit Breaker**: Proteção contra falhas de serviços externos
 
-## 📁 Estrutura de Diretórios
+## Estrutura de Diretórios
 
 ```
 picpay_desafio/
@@ -294,7 +294,7 @@ picpay_desafio/
     └── api-docs/         # Documentação Swagger gerada
 ```
 
-## 🧪 Testes
+## Testes
 
 A estrutura de testes está preparada. Para executar:
 
@@ -302,12 +302,12 @@ A estrutura de testes está preparada. Para executar:
 php artisan test
 ```
 
-## 📖 Documentação Adicional
+## Documentação Adicional
 
 - Acesse a documentação Swagger em: `http://localhost:8000/api/documentation`
 - Documentação do Laravel: https://laravel.com/docs
 
-## 🔐 Segurança
+## Segurança
 
 - Senhas são hasheadas usando bcrypt
 - Autenticação via JWT tokens
@@ -316,7 +316,7 @@ php artisan test
 - Proteção contra SQL Injection (Eloquent ORM)
 - Proteção contra XSS (sanitização automática do Laravel)
 
-## 🚧 Melhorias Futuras
+## Melhorias Futuras
 
 - [ ] Implementar testes unitários e de integração completos
 - [X] Adicionar Docker/Docker Compose
@@ -328,7 +328,7 @@ php artisan test
 - [ ] Adicionar validação de CPF/CNPJ mais robusta
 - [ ] Implementar eventos e listeners para melhor desacoplamento
 
-## 📄 Licença
+## Licença
 
 Este projeto foi desenvolvido como parte de um desafio técnico.
 
