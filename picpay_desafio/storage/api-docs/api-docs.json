@@ -158,47 +158,59 @@
                 ],
                 "summary": "Lista todos os usuários",
                 "operationId": "c457726701591d1183b53aa71fc13441",
+                "parameters": [
+                    {
+                        "name": "quantity",
+                        "in": "query",
+                        "description": "Quantidade de itens por página",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Lista de usuários retornada com sucesso",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "properties": {
-                                            "id": {
-                                                "type": "integer",
-                                                "example": 1
-                                            },
-                                            "name": {
-                                                "type": "string",
-                                                "example": "Carlos Freitas"
-                                            },
-                                            "email": {
-                                                "type": "string",
-                                                "example": "carlos@teste.com"
-                                            },
-                                            "cpf_cnpj": {
-                                                "type": "string",
-                                                "example": "12345678900"
-                                            },
-                                            "type": {
-                                                "type": "string",
-                                                "example": "user"
-                                            },
-                                            "wallet": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
                                                 "properties": {
-                                                    "balance": {
-                                                        "type": "number",
-                                                        "example": 100.5
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Carlos Freitas"
+                                                    },
+                                                    "email": {
+                                                        "type": "string",
+                                                        "example": "carlos@teste.com"
+                                                    },
+                                                    "type": {
+                                                        "type": "string",
+                                                        "example": "user"
                                                     }
                                                 },
                                                 "type": "object"
                                             }
                                         },
-                                        "type": "object"
-                                    }
+                                        "current_page": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "per_page": {
+                                            "type": "integer",
+                                            "example": 15
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             }
                         }
@@ -385,7 +397,7 @@
                         "description": "ID do usuário",
                         "required": true,
                         "schema": {
-                            "type": "integer"
+                            "type": "string"
                         }
                     }
                 ],
@@ -475,7 +487,7 @@
                         "description": "ID do usuário",
                         "required": true,
                         "schema": {
-                            "type": "integer"
+                            "type": "string"
                         }
                     }
                 ],
@@ -506,6 +518,418 @@
                     }
                 ]
             }
+        },
+        "/api/wallet/deposit": {
+            "post": {
+                "tags": [
+                    "Wallet"
+                ],
+                "summary": "Realiza um depósito na carteira",
+                "operationId": "506845afd12f94e48ec2a586dfb9ee86",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "amount",
+                                    "wallet_id"
+                                ],
+                                "properties": {
+                                    "wallet_id": {
+                                        "type": "string",
+                                        "format": "uuid",
+                                        "example": "d290f1ee-6c54-4b01-90e6-d701748f0851"
+                                    },
+                                    "amount": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 100.5
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Depósito realizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "format": "uuid"
+                                        },
+                                        "balance": {
+                                            "type": "number",
+                                            "example": 100.5
+                                        },
+                                        "user_id": {
+                                            "type": "string",
+                                            "format": "uuid"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/wallet/withdraw": {
+            "post": {
+                "tags": [
+                    "Wallet"
+                ],
+                "summary": "Realiza um saque da carteira",
+                "operationId": "73405c27b66fe831f83304cefd43c831",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "amount",
+                                    "wallet_id"
+                                ],
+                                "properties": {
+                                    "wallet_id": {
+                                        "type": "string",
+                                        "format": "uuid",
+                                        "example": "d290f1ee-6c54-4b01-90e6-d701748f0851"
+                                    },
+                                    "amount": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 50
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Saque realizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "format": "uuid"
+                                        },
+                                        "balance": {
+                                            "type": "number",
+                                            "example": 50.5
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Saldo insuficiente ou erro de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/wallet/transfer": {
+            "post": {
+                "tags": [
+                    "Wallet"
+                ],
+                "summary": "Realiza transferência entre carteiras (P2P)",
+                "operationId": "16a8c35042c0240bf65581c3c2d89d8c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "amount",
+                                    "wallet_id_source",
+                                    "wallet_id_destination"
+                                ],
+                                "properties": {
+                                    "wallet_id_source": {
+                                        "description": "Quem paga",
+                                        "type": "string",
+                                        "format": "uuid",
+                                        "example": "source-uuid-123"
+                                    },
+                                    "wallet_id_destination": {
+                                        "description": "Quem recebe",
+                                        "type": "string",
+                                        "format": "uuid",
+                                        "example": "dest-uuid-456"
+                                    },
+                                    "amount": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 25
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Transferência realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 10
+                                        },
+                                        "amount": {
+                                            "type": "number",
+                                            "example": 25
+                                        },
+                                        "type": {
+                                            "type": "string",
+                                            "example": "transfer"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erro de negócio (Saldo insuficiente, Lojista, etc)"
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/wallet/{id}/statement": {
+            "get": {
+                "tags": [
+                    "Wallet"
+                ],
+                "summary": "Consulta extrato de transações",
+                "operationId": "b482cfc01475f9a074c1f49d0aeb6e8b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID da Carteira",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "name": "start_date",
+                        "in": "query",
+                        "description": "Data inicial (YYYY-MM-DD)",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "query",
+                        "description": "Data final (YYYY-MM-DD)",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de transações",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "amount": {
+                                                "type": "number"
+                                            },
+                                            "type": {
+                                                "type": "string",
+                                                "example": "transfer"
+                                            },
+                                            "description": {
+                                                "type": "string"
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/wallet/{id}/balance": {
+            "get": {
+                "tags": [
+                    "Wallet"
+                ],
+                "summary": "Consulta saldo atual",
+                "operationId": "b613fc4eaa2e33dd8d6cec4b7a347beb",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Saldo retornado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "balance": {
+                                            "type": "number",
+                                            "example": 1500
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/wallet/{id}": {
+            "get": {
+                "tags": [
+                    "Wallet"
+                ],
+                "summary": "Consulta detalhes da carteira",
+                "operationId": "5209382607e4a308baeefd946550b1d5",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do usuario",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Carteira encontrada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "required": [
+                                        "id",
+                                        "user_id",
+                                        "balance"
+                                    ],
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "format": "uuid",
+                                            "example": "019b2a70-24e1-73b7-a8e3-671714e36872"
+                                        },
+                                        "user_id": {
+                                            "type": "string",
+                                            "format": "uuid",
+                                            "example": "019b2a66-104f-7119-9fd4-0c0708bf7eb1"
+                                        },
+                                        "balance": {
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": 1500
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Carteira não encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
@@ -526,6 +950,10 @@
         {
             "name": "Users",
             "description": "Users"
+        },
+        {
+            "name": "Wallet",
+            "description": "Wallet"
         }
     ]
 }

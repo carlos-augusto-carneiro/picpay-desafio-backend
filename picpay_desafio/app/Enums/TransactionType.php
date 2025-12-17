@@ -4,6 +4,7 @@ namespace App\Enums;
 
 enum TransactionType: string
 {
-    case SENDING = 'sending';
-    case RECEIVING = 'receiving';
+    case DEPOSIT = 'deposit';
+    case WITHDRAW = 'withdraw';
+    case TRANSFER = 'transfer';
 }

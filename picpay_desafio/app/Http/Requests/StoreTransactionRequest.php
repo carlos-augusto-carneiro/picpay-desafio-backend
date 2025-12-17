@@ -24,7 +24,7 @@ class StoreTransactionRequest extends FormRequest
         return [
             "wallet_id"=> "required|string|exists:wallets,id",
             "amount"=> "required|numeric|min:0",
-            "type"=> "required|string|in:sending,receiving",
+            "type"=> "required|string|in:deposit,withdraw,transfer",
             "wallet_id_destination"=> "required|string|exists:wallets,id",
             "description"=> "nullable|string|max:255",
         ];

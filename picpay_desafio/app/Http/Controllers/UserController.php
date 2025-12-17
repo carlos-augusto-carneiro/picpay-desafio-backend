@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\CQRS\User\Commands\CreateUserCommand;
 use App\CQRS\User\Commands\DeleteUserCommand;
+use App\CQRS\User\Commands\GetAllUserCommand;
 use App\CQRS\User\Commands\UpdateUserCommand;
 use App\Http\Requests\UpdateUserRequest;
 use App\CQRS\User\Queries\GetUserQuery;
@@ -14,6 +15,7 @@ use App\CQRS\User\Handlers\GetUserHandler;
 use App\CQRS\User\Handlers\UpdateUserHandler;
 use App\Enums\UserType;
 use App\Http\Requests\StoreUserRequest;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -23,28 +25,36 @@ class UserController extends Controller
      * summary="Lista todos os usuários",
      * tags={"Users"},
      * security={{"bearerAuth":{}}},
+     * @OA\Parameter(
+     * name="quantity",
+     * in="query",
+     * description="Quantidade de itens por página",
+     * required=false,
+     * @OA\Schema(type="integer", default=15)
+     * ),
      * @OA\Response(
      * response=200,
      * description="Lista de usuários retornada com sucesso",
      * @OA\JsonContent(
-     * type="array",
-     * @OA\Items(
+     * type="object",
+     * @OA\Property(property="data", type="array", @OA\Items(
      * @OA\Property(property="id", type="integer", example=1),
      * @OA\Property(property="name", type="string", example="Carlos Freitas"),
      * @OA\Property(property="email", type="string", example="carlos@teste.com"),
-     * @OA\Property(property="cpf_cnpj", type="string", example="12345678900"),
-     * @OA\Property(property="type", type="string", example="user"),
-     * @OA\Property(property="wallet", type="object",
-     * @OA\Property(property="balance", type="number", example=100.50)
-     * )
-     * )
+     * @OA\Property(property="type", type="string", example="user")
+     * )),
+     * @OA\Property(property="current_page", type="integer", example=1),
+     * @OA\Property(property="per_page", type="integer", example=15)
      * )
      * )
      * )
      */
-    public function index(GetAllUserHandler $handler)
+    public function index(Request $request, GetAllUserHandler $handler)
     {
-        $users = $handler->handle();
+        /*@var int $quantity */
+        $quantity = $request->query('quantity', 15);
+        $command = new GetAllUserCommand(quantity: $quantity);
+        $users = $handler->handle($command);
         return response()->json($users);
     }
 
@@ -145,7 +155,7 @@ class UserController extends Controller
      * in="path",
      * description="ID do usuário",
      * required=true,
-     * @OA\Schema(type="integer")
+     * @OA\Schema(type="string")
      * ),
      * @OA\RequestBody(
      * required=true,
@@ -175,6 +185,10 @@ class UserController extends Controller
     {
         $data = $request->validated();
 
+        $senderWallet = $request->user()->id;
+        if ($senderWallet !== $id) {
+            abort(422, 'Você não pode atualizar um usuário que não é você.');
+        }
         $command = new UpdateUserCommand(
             userId: $id,
             name: $data['name'] ?? null,
@@ -200,7 +214,7 @@ class UserController extends Controller
      * in="path",
      * description="ID do usuário",
      * required=true,
-     * @OA\Schema(type="integer")
+     * @OA\Schema(type="string")
      * ),
      * @OA\Response(
      * response=200,
@@ -212,9 +226,13 @@ class UserController extends Controller
      * @OA\Response(response=404, description="Usuário não encontrado")
      * )
      */
-    public function destroy(string $id, DeleteUserHandler $handler)
+    public function destroy(string $id, Request $request, DeleteUserHandler $handler)
     {
         $command = new DeleteUserCommand(userId: $id);
+        $senderWallet = $request->user()->id;
+        if ($senderWallet !== $id) {
+            abort(422, 'Você não pode deletar um usuário que não é você.');
+        }
         $handler->handle($command);
         return response()->json(['message' => "User with ID: {$command->userId} deleted successfully"]);
     }
