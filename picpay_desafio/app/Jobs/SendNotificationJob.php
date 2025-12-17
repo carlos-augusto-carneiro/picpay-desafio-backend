@@ -30,6 +30,7 @@ class SendNotificationJob implements ShouldQueue
      */
     public function handle(): void
     {
+        Log::info("Enviando notificação para a transação: " . $this->transaction->id);
         /** @var Response $response */
         $response = Http::withoutVerifying()->post('https://util.devi.tools/api/v1/notify');
         if ($response->failed()) {
