@@ -98,7 +98,7 @@ class AuthController extends Controller
      * )
      * )
      */
-    public function refreshLogin(RefreshLoginHandler $handler)
+    public function refreshLogin(Request $request, RefreshLoginHandler $handler)
     {
         $tokenData = $handler->handle();
         return response()->json($tokenData);

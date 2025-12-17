@@ -15,20 +15,26 @@ class TransferMoneyHandler
     public function __construct(protected AuthorizationService $authorizationService)
     {
     }
+
     public function handle(TransferMoneyCommand $command)
     {
         $payer = Wallet::with("user")->findOrFail($command->walletIdpayer);
         $payee = Wallet::with("user")->findOrFail($command->walletIdpayee);
 
         if($payer->user->type === 'store'){
-            throw new \Exception("Lojistas não podem realizar transferências");
-        }
-        if($payer->balance < $command->amount){
-            throw new \Exception("Saldo insuficiente para realizar a transferência");
+            abort(403, "Lojistas não podem realizar transferências");
         }
 
         $this->authorizationService->authorize();
-        $transaction =DB::transaction(function () use ($command, $payer, $payee) {
+
+        $transaction = DB::transaction(function () use ($command, $payer, $payee) {
+
+            $payer = Wallet::where('id', $payer->id)->lockForUpdate()->first();
+
+            if($payer->balance < $command->amount){
+                throw new \Exception("Saldo insuficiente para realizar a transferência");
+            }
+
             $payer->balance -= $command->amount;
             $payer->save();
 
@@ -44,7 +50,8 @@ class TransferMoneyHandler
             ]);
         });
 
-        SendNotificationJob::dispatch($transaction, "Você realizou uma transferência de {$command->amount} para {$payee->user->name}");
+        SendNotificationJob::dispatch($transaction, $payer->user, $payee->user);
+
         return $transaction;
     }
 }
