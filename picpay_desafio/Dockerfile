@@ -18,9 +18,17 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www
 
 COPY composer.json composer.lock ./
+
 COPY . .
 
-RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+RUN composer install --no-dev --prefer-dist --no-interaction
+
+RUN mkdir -p /var/www/bootstrap/cache && \
+    chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+
+COPY entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/entrypoint.sh
+ENTRYPOINT ["entrypoint.sh"]
 
 EXPOSE 9000
 CMD ["php-fpm"]

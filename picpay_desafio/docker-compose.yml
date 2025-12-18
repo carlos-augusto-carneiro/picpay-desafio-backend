@@ -9,7 +9,6 @@ services:
     working_dir: /var/www
     volumes:
       - .:/var/www
-      - ./.env:/var/www/.env
     depends_on:
       - db
 
@@ -22,9 +21,9 @@ services:
     working_dir: /var/www
     volumes:
       - .:/var/www
-      - ./.env:/var/www/.env
     depends_on:
-      - app
+      db:
+        condition: service_healthy
     command: php artisan queue:work --tries=5
 
   db:
@@ -38,6 +37,10 @@ services:
       MYSQL_USER: ${DB_USERNAME}
     ports:
       - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
 
   nginx:
     image: nginx:alpine
